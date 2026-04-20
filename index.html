@@ -1,0 +1,1497 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>INSTABRAND · Propuesta de Servicios · aigenci</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --morado:#6F4C9E;
+    --morado-deep:#5A3D84;
+    --morado-oscuro:#312740;
+    --indigo-claro:#EEECFF;
+    --indigo-mid:#DCD7F7;
+    --rosa:#FD327B;
+    --celeste:#5FCFFA;
+    --blanco:#FFFFFF;
+    --papel:#FBFAFF;
+    --linea:rgba(49,39,64,.10);
+    --linea-fuerte:rgba(49,39,64,.18);
+    --shadow-soft: 0 1px 2px rgba(49,39,64,.04), 0 8px 24px rgba(49,39,64,.06);
+    --shadow-md: 0 2px 6px rgba(49,39,64,.06), 0 24px 60px -20px rgba(111,76,158,.25);
+    --radius-sm:10px;
+    --radius:18px;
+    --radius-lg:28px;
+    --font-display:'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+    --font-body:'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-mono:'JetBrains Mono', ui-monospace, monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--font-body);
+    color:var(--morado-oscuro);
+    background:var(--papel);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    font-size:16px;
+    line-height:1.55;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--morado);color:#fff}
+
+  /* -------- LOADER -------- */
+  #loader{
+    position:fixed;inset:0;z-index:9999;
+    background:var(--morado-oscuro);
+    color:#fff;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:36px;
+    transition:opacity .8s ease, visibility .8s ease;
+  }
+  #loader.done{opacity:0;visibility:hidden;pointer-events:none}
+  .logo-wrap{position:relative;width:140px;height:140px;display:grid;place-items:center}
+  .logo-ring{
+    position:absolute;inset:-18px;
+    border-radius:50%;
+    border:1.5px solid rgba(255,255,255,.12);
+    border-top-color:var(--celeste);
+    border-right-color:var(--rosa);
+    animation:spin 1.6s linear infinite;
+  }
+  .logo-ring.two{
+    inset:-36px;
+    border:1px dashed rgba(255,255,255,.08);
+    border-top-color:transparent;
+    animation:spin 4.5s linear infinite reverse;
+  }
+  .logo-iso{
+    width:120px;height:120px;
+    background:url('assets/logo_a_aigenci-isotipo.png') center/contain no-repeat;
+    filter: drop-shadow(0 12px 30px rgba(111,76,158,.6));
+    animation:pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes pulse{
+    0%,100%{transform:scale(1)}
+    50%{transform:scale(.92)}
+  }
+  .loader-meta{
+    text-align:center;
+    display:flex;flex-direction:column;gap:14px;align-items:center;
+  }
+  .loader-word{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:13px;
+    letter-spacing:.32em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,.72);
+  }
+  .loader-bar{
+    width:240px;height:2px;background:rgba(255,255,255,.12);border-radius:2px;overflow:hidden;
+  }
+  .loader-bar-fill{
+    height:100%;width:0;
+    background:linear-gradient(90deg, var(--celeste), var(--morado), var(--rosa));
+    animation:fillbar 1.8s cubic-bezier(.6,.05,.3,1) forwards;
+  }
+  @keyframes fillbar{to{width:100%}}
+  .loader-pct{
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:rgba(255,255,255,.5);
+    letter-spacing:.1em;
+  }
+
+  /* -------- LAYOUT -------- */
+  .app{
+    display:grid;
+    grid-template-columns: 280px 1fr;
+    min-height:100vh;
+    opacity:0;
+    transition:opacity .8s ease .2s;
+  }
+  .app.ready{opacity:1}
+
+  /* -------- SIDEBAR -------- */
+  aside.nav{
+    position:sticky;top:0;
+    height:100vh;
+    padding:28px 22px;
+    border-right:1px solid var(--linea);
+    background:var(--blanco);
+    display:flex;flex-direction:column;gap:20px;
+    overflow-y:auto;
+  }
+  .brand{
+    display:flex;align-items:center;gap:12px;
+    padding-bottom:20px;
+    border-bottom:1px solid var(--linea);
+  }
+  .brand-mark{
+    width:42px;height:42px;
+    background:url('assets/logo_a_aigenci-isotipo.png') center/contain no-repeat;
+    flex-shrink:0;
+  }
+  .brand-text{
+    display:flex;flex-direction:column;line-height:1.1;
+  }
+  .brand-text .name{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:17px;
+    letter-spacing:-.01em;
+  }
+  .brand-text .sub{
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    color:var(--morado);
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    margin-top:3px;
+  }
+  .nav-label{
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    color:rgba(49,39,64,.5);
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    padding:0 8px;
+  }
+  .nav-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:1px}
+  .nav-list a{
+    display:flex;align-items:center;gap:10px;
+    padding:9px 10px;
+    border-radius:10px;
+    color:var(--morado-oscuro);
+    text-decoration:none;
+    font-size:13.5px;
+    font-weight:500;
+    transition:all .18s ease;
+    position:relative;
+  }
+  .nav-list a .num{
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    color:rgba(49,39,64,.45);
+    min-width:22px;
+    flex-shrink:0;
+  }
+  .nav-list a:hover{background:var(--indigo-claro);color:var(--morado)}
+  .nav-list a.active{
+    background:var(--morado-oscuro);
+    color:#fff;
+  }
+  .nav-list a.active .num{color:rgba(255,255,255,.6)}
+
+  .nav-foot{
+    margin-top:auto;
+    padding-top:18px;
+    border-top:1px solid var(--linea);
+    display:flex;flex-direction:column;gap:8px;
+  }
+  .nav-foot .meta{
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    color:rgba(49,39,64,.55);
+    letter-spacing:.06em;
+    line-height:1.6;
+  }
+  .nav-foot .meta b{color:var(--morado-oscuro);font-weight:600}
+
+  /* -------- MAIN -------- */
+  main{min-width:0}
+  section{
+    padding:110px 8vw;
+    max-width:1200px;
+    scroll-margin-top:40px;
+  }
+  section + section{border-top:1px solid var(--linea)}
+
+  .sec-meta{
+    display:flex;align-items:center;gap:14px;
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--morado);
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    margin-bottom:22px;
+  }
+  .sec-meta .dot{width:6px;height:6px;border-radius:50%;background:var(--rosa);display:inline-block}
+  .sec-meta .line{flex:1;height:1px;background:var(--linea-fuerte);max-width:120px}
+
+  h1,h2,h3,h4{font-family:var(--font-display);font-weight:600;letter-spacing:-.02em;margin:0}
+  h1{font-size:clamp(44px,6vw,76px);line-height:1.02;font-weight:700}
+  h2{font-size:clamp(32px,3.8vw,48px);line-height:1.08;margin-bottom:18px}
+  h3{font-size:22px;line-height:1.2;margin-bottom:10px}
+  h4{font-size:15px;font-family:var(--font-body);font-weight:600;letter-spacing:0}
+  p{margin:0 0 14px}
+  p.lead{font-size:19px;line-height:1.55;color:rgba(49,39,64,.78);max-width:680px}
+
+  /* -------- HERO -------- */
+  .hero{
+    padding-top:72px;
+    padding-bottom:60px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:'';position:absolute;inset:0;
+    background:
+      radial-gradient(ellipse at 85% 15%, rgba(111,76,158,.12), transparent 55%),
+      radial-gradient(ellipse at 10% 90%, rgba(95,207,250,.10), transparent 50%);
+    pointer-events:none;
+  }
+  .hero-inner{position:relative;z-index:1}
+  .hero-topline{
+    display:flex;align-items:center;gap:14px;
+    font-family:var(--font-mono);font-size:11.5px;
+    color:var(--morado);letter-spacing:.18em;text-transform:uppercase;
+    margin-bottom:36px;
+    flex-wrap:wrap;
+  }
+  .hero-topline .chip{
+    padding:5px 10px;border:1px solid var(--morado);border-radius:999px;
+    background:rgba(111,76,158,.06);
+  }
+  .client-line{
+    font-family:var(--font-mono);font-size:12px;color:rgba(49,39,64,.55);
+    letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;
+  }
+  .hero h1 span.accent{color:var(--morado);}
+  .hero h1 span.italic{font-style:italic;font-family:var(--font-display);font-weight:400;color:rgba(49,39,64,.55);display:inline-block;}
+
+  .hero-sub{
+    margin-top:14px;font-size:18px;line-height:1.55;color:rgba(49,39,64,.72);max-width:620px;
+  }
+  .hero-cta{
+    margin-top:40px;display:flex;gap:10px;flex-wrap:wrap;
+  }
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:13px 20px;border-radius:999px;
+    font-family:var(--font-body);font-weight:500;font-size:14px;
+    text-decoration:none;transition:all .2s ease;cursor:pointer;border:1px solid transparent;
+  }
+  .btn.primary{background:var(--morado-oscuro);color:#fff}
+  .btn.primary:hover{background:var(--morado);transform:translateY(-1px)}
+  .btn.ghost{background:transparent;color:var(--morado-oscuro);border-color:var(--linea-fuerte)}
+  .btn.ghost:hover{border-color:var(--morado);color:var(--morado)}
+  .btn .arrow{transition:transform .2s ease}
+  .btn:hover .arrow{transform:translateX(3px)}
+
+  .hero-headline{
+    display:grid;grid-template-columns: minmax(0,1.15fr) minmax(0,.85fr);
+    gap:56px;align-items:end;
+  }
+  .hero-headline > .left{min-width:0}
+  @media (max-width:1080px){
+    .hero-headline{grid-template-columns:1fr;gap:36px;align-items:start}
+  }
+
+  /* custom placeholder for INSTABRAND — brand registration motif */
+  .hero-placeholder{
+    position:relative;
+    aspect-ratio: 4 / 5;
+    border-radius:var(--radius-lg);
+    overflow:hidden;
+    background:
+      radial-gradient(circle at 30% 25%, rgba(253,50,123,.18), transparent 55%),
+      radial-gradient(circle at 75% 80%, rgba(95,207,250,.22), transparent 55%),
+      linear-gradient(160deg, #312740 0%, #3E2F54 55%, #5A3D84 100%);
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow: var(--shadow-md);
+    color:#fff;
+  }
+  @media (max-width:1080px){
+    .hero-placeholder{aspect-ratio: 16 / 10;max-width:620px}
+  }
+  /* big R mark */
+  .hero-placeholder .rmark{
+    position:absolute;inset:0;
+    display:grid;place-items:center;
+  }
+  .hero-placeholder .rmark svg{
+    width:78%;height:78%;
+    filter: drop-shadow(0 18px 40px rgba(253,50,123,.35));
+  }
+  .hero-placeholder .ph-corner{
+    position:absolute;top:18px;left:20px;right:20px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:var(--font-mono);font-size:10.5px;letter-spacing:.16em;
+    color:rgba(255,255,255,.85);text-transform:uppercase;
+  }
+  .hero-placeholder .ph-corner .live::before{
+    content:'';display:inline-block;width:6px;height:6px;border-radius:50%;
+    background:var(--celeste);margin-right:6px;vertical-align:1px;
+    animation: blink 1.8s ease-in-out infinite;
+  }
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+  .hero-placeholder .ph-foot{
+    position:absolute;left:20px;right:20px;bottom:20px;
+    display:flex;justify-content:space-between;align-items:flex-end;gap:12px;
+    font-family:var(--font-mono);font-size:10.5px;letter-spacing:.12em;
+    color:rgba(255,255,255,.9);text-transform:uppercase;z-index:2;
+  }
+  .hero-placeholder .ph-foot .tag{
+    background:rgba(255,255,255,.12);
+    padding:6px 10px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.18);
+    backdrop-filter: blur(8px);
+  }
+  .hero-placeholder .grid-overlay{
+    position:absolute;inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(circle at 50% 50%, black 0%, black 45%, transparent 75%);
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, black 0%, black 45%, transparent 75%);
+  }
+  .hero-placeholder .pulse-ring{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:56%;aspect-ratio:1;border-radius:50%;
+    border:1px dashed rgba(255,255,255,.22);
+    animation: slowspin 32s linear infinite;
+  }
+  .hero-placeholder .pulse-ring.two{
+    width:72%;border:1px solid rgba(253,50,123,.22);animation-duration:48s;animation-direction:reverse;
+  }
+  @keyframes slowspin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+
+  /* hero objetivo block */
+  .hero-objetivo{margin-top:64px;max-width:780px}
+  .hero-card{
+    background:var(--morado-oscuro);
+    color:#fff;
+    padding:44px 48px;
+    border-radius:var(--radius-lg);
+    position:relative;
+    overflow:hidden;
+    box-shadow: var(--shadow-md);
+    margin-top:40px;
+  }
+  .hero-card-head{max-width:640px;margin-bottom:32px}
+  @media (max-width:700px){
+    .hero-card{padding:32px}
+  }
+  .hero-card::before{
+    content:'';position:absolute;inset:auto -40px -40px auto;width:200px;height:200px;
+    background:radial-gradient(circle, rgba(253,50,123,.4), transparent 65%);
+    filter:blur(10px);
+  }
+  .hero-card .kicker{
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+    color:rgba(255,255,255,.55);margin-bottom:18px;display:flex;align-items:center;gap:10px;
+  }
+  .hero-card .kicker::before{content:'';width:6px;height:6px;background:var(--celeste);border-radius:50%}
+  .hero-card h3{color:#fff;font-size:26px;margin-bottom:8px;line-height:1.2}
+  .hero-card p{color:rgba(255,255,255,.72);font-size:14.5px}
+  .hero-card .stat-row{
+    display:grid;grid-template-columns:1fr;gap:18px;
+    border-top:1px solid rgba(255,255,255,.1);
+    padding-top:28px;
+  }
+  .hero-card .stat{
+    display:grid;grid-template-columns:38px 1fr;gap:14px;align-items:start;padding:0;
+  }
+  .hero-card .stat .ico{
+    width:38px;height:38px;border-radius:10px;
+    background:rgba(95,207,250,.12);
+    color:var(--celeste);
+    display:grid;place-items:center;
+    border:1px solid rgba(95,207,250,.22);
+  }
+  .hero-card .stat .ico svg{width:18px;height:18px;display:block}
+  .hero-card .stat .body{display:flex;flex-direction:column;gap:2px;min-width:0}
+  .hero-card .stat b{
+    font-family:var(--font-display);font-size:15px;font-weight:600;letter-spacing:-.005em;color:#fff;line-height:1.2;
+  }
+  .hero-card .stat span{
+    font-family:var(--font-mono);font-size:11px;color:rgba(255,255,255,.55);
+    text-transform:uppercase;letter-spacing:.1em;
+  }
+  .hero-card .stat small{
+    display:block;color:rgba(255,255,255,.75);font-size:13px;line-height:1.45;margin-top:2px;
+  }
+  @media (max-width:700px){
+    .hero-card .stat-row{grid-template-columns:1fr}
+    .hero-card h3{font-size:22px}
+  }
+
+  /* -------- GENERIC BLOCKS -------- */
+  .two-col{display:grid;grid-template-columns:1fr 1.4fr;gap:60px;align-items:start}
+  .two-col .label{
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--morado);margin-bottom:14px;
+  }
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:28px}
+  .card{
+    background:#fff;border:1px solid var(--linea);border-radius:var(--radius);
+    padding:26px;transition:all .25s ease;position:relative;overflow:hidden;
+  }
+  .card:hover{border-color:var(--morado);transform:translateY(-2px);box-shadow:var(--shadow-md)}
+  .card .idx{
+    font-family:var(--font-mono);font-size:11px;color:var(--morado);
+    letter-spacing:.12em;margin-bottom:14px;display:flex;align-items:center;gap:8px;
+  }
+  .card .idx::before{content:'';width:14px;height:1px;background:var(--morado)}
+  .card p{font-size:14.5px;color:rgba(49,39,64,.72);margin:0}
+  .card h3{font-size:18px;margin-bottom:8px}
+
+  /* Reto callout */
+  .callout{
+    background:var(--indigo-claro);
+    border-radius:var(--radius-lg);
+    padding:48px;
+    margin-top:32px;
+    display:grid;grid-template-columns:auto 1fr;gap:36px;align-items:center;
+  }
+  .callout-big{
+    font-family:var(--font-display);
+    font-size:110px;font-weight:700;line-height:.9;letter-spacing:-.04em;
+    color:var(--morado);
+  }
+  .callout .msg{font-size:18px;line-height:1.5;color:var(--morado-oscuro)}
+  .callout .msg em{font-style:normal;color:var(--morado);font-weight:600}
+
+  /* Customer Journey table */
+  .journey{
+    margin-top:28px;border:1px solid var(--linea);border-radius:var(--radius);overflow:hidden;background:#fff;
+  }
+  .journey .jrow{
+    display:grid;grid-template-columns: 80px 1.3fr 2fr 1fr;gap:0;
+    border-bottom:1px solid var(--linea);
+    align-items:stretch;
+  }
+  .journey .jrow:last-child{border-bottom:none}
+  .journey .jrow.jhead{
+    background:var(--indigo-claro);
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:rgba(49,39,64,.6);
+  }
+  .journey .jrow > div{padding:18px 22px;border-right:1px solid var(--linea);display:flex;align-items:center}
+  .journey .jrow > div:last-child{border-right:none}
+  .journey .jrow.jhead > div{padding:16px 22px}
+  .journey .jstep{font-family:var(--font-display);font-weight:700;font-size:22px;color:var(--morado);letter-spacing:-.02em}
+  .journey .jname{font-weight:600;color:var(--morado-oscuro);font-size:15.5px;display:block}
+  .journey .jname-cell{flex-direction:column;align-items:flex-start;gap:4px}
+  .journey .jname-cell small{font-family:var(--font-mono);font-size:10.5px;color:var(--morado);letter-spacing:.12em;text-transform:uppercase}
+  .journey .jdesc{color:rgba(49,39,64,.72);font-size:14px;line-height:1.5}
+  .journey .jtools{color:var(--morado-oscuro);font-size:13px;font-weight:500;line-height:1.4}
+  @media (max-width:900px){
+    .journey .jrow{grid-template-columns:1fr;gap:0}
+    .journey .jrow.jhead{display:none}
+    .journey .jrow > div{border-right:none;border-bottom:1px solid var(--linea)}
+    .journey .jrow > div:last-child{border-bottom:none}
+  }
+
+  /* Elementos */
+  .elements{display:flex;flex-direction:column;gap:0;margin-top:24px}
+  .elemento{
+    display:grid;grid-template-columns:180px 1fr;gap:40px;
+    padding:42px 0;
+    border-bottom:1px solid var(--linea);
+  }
+  .elemento:last-child{border-bottom:none}
+  .elemento .tag{
+    font-family:var(--font-mono);font-size:12px;color:var(--morado);letter-spacing:.14em;
+  }
+  .elemento .tag b{
+    display:block;font-family:var(--font-display);font-size:44px;color:var(--morado-oscuro);
+    font-weight:700;letter-spacing:-.02em;line-height:.95;margin-top:6px;
+  }
+  .elemento h3{font-size:26px;margin-bottom:6px;max-width:720px}
+  .elemento .sub{color:rgba(49,39,64,.65);font-size:15px;margin-bottom:18px;max-width:720px;font-style:italic}
+  .elemento ul{
+    list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;
+  }
+  .elemento ul li{
+    display:grid;grid-template-columns:18px 1fr;gap:12px;
+    font-size:14.5px;color:var(--morado-oscuro);line-height:1.5;
+  }
+  .elemento ul li::before{
+    content:'';display:block;width:7px;height:7px;background:var(--morado);border-radius:2px;
+    margin-top:8px;transform:rotate(45deg);
+  }
+  .elemento ul li b{color:var(--morado);font-weight:600}
+
+  /* -------- TABLE: escenarios -------- */
+  .table-wrap{
+    margin-top:32px;border:1px solid var(--linea);border-radius:var(--radius);overflow:hidden;
+    background:#fff;
+  }
+  table.proj{
+    width:100%;border-collapse:collapse;font-size:14.5px;
+  }
+  table.proj thead th{
+    text-align:left;padding:20px 24px;
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:rgba(49,39,64,.6);font-weight:500;
+    border-bottom:1px solid var(--linea-fuerte);
+    background:var(--indigo-claro);
+  }
+  table.proj thead th.cons{color:var(--morado-oscuro)}
+  table.proj thead th.opt{color:var(--morado);background:rgba(111,76,158,.08)}
+  table.proj td{
+    padding:18px 24px;border-bottom:1px solid var(--linea);
+  }
+  table.proj tbody tr:last-child td{border-bottom:none}
+  table.proj td.metric{color:rgba(49,39,64,.7);font-weight:500}
+  table.proj td.val{font-family:var(--font-display);font-weight:500;font-size:17px;letter-spacing:-.01em}
+  table.proj td.val.hl{color:var(--morado);background:rgba(111,76,158,.04)}
+  table.proj tr.big td{padding-top:22px;padding-bottom:22px}
+  table.proj tr.big td.val{font-size:22px;font-weight:600}
+
+  .note-block{
+    margin-top:20px;padding:22px 24px;
+    background:var(--morado-oscuro);color:#fff;border-radius:var(--radius);
+    font-size:14.5px;line-height:1.55;display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center;
+  }
+  .note-block .icon{
+    width:44px;height:44px;border-radius:12px;background:rgba(253,50,123,.18);color:var(--rosa);
+    display:grid;place-items:center;font-family:var(--font-display);font-weight:700;font-size:20px;flex-shrink:0;
+  }
+  .note-block b{color:var(--celeste);font-weight:600}
+
+  /* Ventajas */
+  .ventajas{display:grid;grid-template-columns:repeat(2,1fr);gap:0;margin-top:28px}
+  .ventaja{
+    padding:36px 36px 36px 0;border-right:1px solid var(--linea);border-bottom:1px solid var(--linea);
+  }
+  .ventaja:nth-child(2n){padding-left:36px;border-right:none}
+  .ventaja:nth-last-child(-n+2){border-bottom:none}
+  .ventaja .badge{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:var(--font-mono);font-size:11px;color:var(--morado);letter-spacing:.14em;
+    margin-bottom:14px;
+  }
+  .ventaja .badge::before{
+    content:'';display:inline-block;width:8px;height:8px;background:var(--morado);border-radius:50%;
+  }
+  .ventaja h3{font-size:22px;margin-bottom:8px}
+  .ventaja p{font-size:14.5px;color:rgba(49,39,64,.72);margin:0}
+
+  /* Timeline */
+  .timeline{position:relative;margin-top:32px;padding-left:32px}
+  .timeline::before{
+    content:'';position:absolute;left:6px;top:12px;bottom:12px;width:1px;background:var(--linea-fuerte);
+  }
+  .phase{position:relative;padding-bottom:40px}
+  .phase:last-child{padding-bottom:0}
+  .phase::before{
+    content:'';position:absolute;left:-32px;top:6px;width:13px;height:13px;border-radius:50%;
+    background:#fff;border:2px solid var(--morado);
+  }
+  .phase.current::before{background:var(--morado);box-shadow:0 0 0 6px rgba(111,76,158,.15)}
+  .phase .when{
+    font-family:var(--font-mono);font-size:11px;color:var(--morado);letter-spacing:.14em;
+    text-transform:uppercase;margin-bottom:6px;
+  }
+  .phase h3{font-size:22px;margin-bottom:10px}
+  .phase ul{list-style:none;padding:0;margin:10px 0 12px;display:flex;flex-direction:column;gap:6px}
+  .phase ul li{font-size:14.5px;color:rgba(49,39,64,.75);display:flex;gap:10px}
+  .phase ul li::before{content:'→';color:var(--morado);font-family:var(--font-mono)}
+  .phase .hito{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 12px;border-radius:999px;background:var(--indigo-claro);
+    font-size:12.5px;color:var(--morado-oscuro);font-weight:500;margin-top:4px;
+  }
+  .phase .hito::before{content:'◆';color:var(--rosa);font-size:10px}
+
+  /* Inversión pricing */
+  .pricing{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:36px}
+  .plan{
+    background:#fff;border:1px solid var(--linea);border-radius:var(--radius-lg);
+    padding:36px;position:relative;overflow:hidden;transition:all .25s ease;
+  }
+  .plan:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+  .plan.featured{
+    background:var(--morado-oscuro);color:#fff;border-color:var(--morado-oscuro);
+  }
+  .plan.featured::before{
+    content:'RECOMENDADO';position:absolute;top:20px;right:20px;
+    font-family:var(--font-mono);font-size:10px;letter-spacing:.18em;
+    padding:5px 10px;background:var(--rosa);color:#fff;border-radius:999px;
+  }
+  .plan .pname{
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;color:var(--morado);
+    text-transform:uppercase;margin-bottom:16px;
+  }
+  .plan.featured .pname{color:var(--celeste)}
+  .plan h3{font-size:28px;font-weight:700;margin-bottom:6px}
+  .plan.featured h3{color:#fff}
+  .plan .tag{font-size:14px;color:rgba(49,39,64,.65);margin-bottom:28px}
+  .plan.featured .tag{color:rgba(255,255,255,.7)}
+  .plan .price{
+    display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;
+    padding:22px 0;border-top:1px solid var(--linea);border-bottom:1px solid var(--linea);
+    margin-bottom:24px;
+  }
+  .plan.featured .price{border-color:rgba(255,255,255,.1)}
+  .plan .price .num{
+    font-family:var(--font-display);font-size:40px;font-weight:700;letter-spacing:-.03em;line-height:1;
+  }
+  .plan .price .cur{
+    font-family:var(--font-mono);font-size:12px;color:rgba(49,39,64,.55);letter-spacing:.1em;
+  }
+  .plan.featured .price .cur{color:rgba(255,255,255,.6)}
+  .plan .price small{font-size:13px;color:rgba(49,39,64,.55);margin-left:auto;font-family:var(--font-body)}
+  .plan.featured .price small{color:rgba(255,255,255,.6)}
+  .plan ul.features{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:11px}
+  .plan ul.features li{
+    display:grid;grid-template-columns:20px 1fr;gap:12px;align-items:start;font-size:14.5px;
+  }
+  .plan ul.features li .check{
+    width:18px;height:18px;border-radius:50%;display:grid;place-items:center;
+    background:rgba(111,76,158,.12);color:var(--morado);font-size:11px;font-weight:700;margin-top:2px;
+  }
+  .plan ul.features li.no .check{background:rgba(49,39,64,.08);color:rgba(49,39,64,.4)}
+  .plan ul.features li.no span{color:rgba(49,39,64,.45);text-decoration:line-through}
+  .plan.featured ul.features li .check{background:rgba(95,207,250,.18);color:var(--celeste)}
+  .plan.featured ul.features li.no .check{background:rgba(255,255,255,.08);color:rgba(255,255,255,.4)}
+  .plan.featured ul.features li.no span{color:rgba(255,255,255,.4)}
+  .plan ul.features li .hl{color:var(--morado);font-weight:600}
+  .plan.featured ul.features li .hl{color:var(--celeste)}
+
+  /* Offer banner */
+  .offer{
+    margin-top:28px;padding:28px 32px;
+    background:linear-gradient(100deg, #3B1A2D 0%, #6F4C9E 55%, #FD327B 120%);
+    color:#fff;border-radius:var(--radius-lg);
+    position:relative;overflow:hidden;
+    display:grid;grid-template-columns:auto 1fr auto;gap:26px;align-items:center;
+  }
+  .offer::before{
+    content:'';position:absolute;inset:auto -60px -60px auto;width:240px;height:240px;
+    background:radial-gradient(circle, rgba(95,207,250,.5), transparent 65%);filter:blur(12px);pointer-events:none;
+  }
+  .offer-flame{
+    width:56px;height:56px;border-radius:16px;
+    background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+    display:grid;place-items:center;font-size:26px;position:relative;z-index:1;
+  }
+  .offer-body{position:relative;z-index:1;min-width:0}
+  .offer-body .label{
+    font-family:var(--font-mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
+    color:rgba(255,255,255,.72);margin-bottom:6px;
+  }
+  .offer-body h3{font-size:22px;color:#fff;margin-bottom:6px;line-height:1.25}
+  .offer-body p{color:rgba(255,255,255,.82);font-size:14px;margin:0;max-width:640px}
+  .offer-body p b{color:#fff;font-weight:600}
+  .offer-price{
+    position:relative;z-index:1;text-align:right;
+    display:flex;flex-direction:column;align-items:flex-end;gap:6px;
+    line-height:1.1;white-space:nowrap;
+  }
+  .offer-price > span{display:block}
+  .offer-price .strike{
+    font-family:var(--font-mono);font-size:12px;color:rgba(255,255,255,.55);
+    text-decoration:line-through;letter-spacing:.05em;
+  }
+  .offer-price .now{
+    font-family:var(--font-display);font-weight:700;font-size:32px;letter-spacing:-.02em;color:#fff;line-height:1;
+  }
+  .offer-price .unit{
+    font-family:var(--font-mono);font-size:10.5px;color:rgba(255,255,255,.68);letter-spacing:.1em;text-transform:uppercase;
+  }
+  @media (max-width:760px){
+    .offer{grid-template-columns:1fr;text-align:left}
+    .offer-price{align-items:flex-start;text-align:left}
+  }
+
+  .conditions{
+    margin-top:36px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;
+    padding:24px;background:var(--indigo-claro);border-radius:var(--radius);
+  }
+  .cond{display:flex;flex-direction:column;gap:4px}
+  .cond span{
+    font-family:var(--font-mono);font-size:10.5px;color:var(--morado);letter-spacing:.14em;text-transform:uppercase;
+  }
+  .cond b{font-size:14.5px;font-weight:500;color:var(--morado-oscuro)}
+
+  /* Next steps */
+  .next{
+    background:var(--morado-oscuro);color:#fff;border-radius:var(--radius-lg);padding:56px;margin-top:32px;
+    position:relative;overflow:hidden;
+  }
+  .next::before{
+    content:'';position:absolute;width:400px;height:400px;
+    border-radius:50%;right:-150px;bottom:-200px;
+    background:radial-gradient(circle,rgba(111,76,158,.6),transparent 65%);
+    filter:blur(20px);pointer-events:none;
+  }
+  .next::after{
+    content:'';position:absolute;width:260px;height:260px;
+    border-radius:50%;left:-80px;top:-80px;
+    background:radial-gradient(circle,rgba(95,207,250,.25),transparent 65%);
+    filter:blur(20px);pointer-events:none;
+  }
+  .next-inner{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+  .next h2{color:#fff;margin-bottom:16px;max-width:420px}
+  .next p{color:rgba(255,255,255,.72);max-width:420px}
+  .next-steps{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px}
+  .next-steps li{
+    display:grid;grid-template-columns:36px 1fr;gap:14px;align-items:center;
+    padding:16px 20px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+    border-radius:14px;transition:all .2s ease;
+  }
+  .next-steps li:hover{background:rgba(255,255,255,.1);border-color:var(--celeste)}
+  .next-steps li .n{
+    width:32px;height:32px;border-radius:50%;display:grid;place-items:center;
+    font-family:var(--font-mono);font-size:12px;font-weight:600;
+    background:var(--celeste);color:var(--morado-oscuro);
+  }
+  .next-steps li h4{color:#fff;font-size:15px;margin-bottom:2px}
+  .next-steps li p{color:rgba(255,255,255,.6);font-size:13px;margin:0}
+
+  .cta-block{margin-top:40px;display:flex;gap:12px;flex-wrap:wrap;position:relative;z-index:1}
+  .cta-block .btn.primary{background:#fff;color:var(--morado-oscuro)}
+  .cta-block .btn.primary:hover{background:var(--celeste);color:var(--morado-oscuro)}
+  .cta-block .btn.ghost{border-color:rgba(255,255,255,.25);color:#fff}
+  .cta-block .btn.ghost:hover{border-color:#fff;color:#fff}
+
+  footer{
+    padding:32px 8vw 60px;
+    display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;
+    font-family:var(--font-mono);font-size:11px;color:rgba(49,39,64,.5);letter-spacing:.1em;
+    border-top:1px solid var(--linea);
+  }
+  footer a{color:var(--morado);text-decoration:none}
+
+  .progress{
+    position:fixed;top:0;left:280px;right:0;height:2px;z-index:50;background:transparent;
+  }
+  .progress-fill{
+    height:100%;width:0;background:linear-gradient(90deg,var(--morado),var(--rosa));transition:width .1s linear;
+  }
+
+  @media (max-width:960px){
+    .app{grid-template-columns:1fr}
+    aside.nav{position:static;height:auto;border-right:none;border-bottom:1px solid var(--linea)}
+    .nav-list{flex-direction:row;flex-wrap:wrap;gap:4px}
+    .nav-list a{font-size:12px;padding:7px 12px}
+    .nav-list a .num{display:none}
+    .progress{left:0}
+    section{padding:70px 6vw}
+    .two-col,.next-inner,.pricing{grid-template-columns:1fr;gap:32px}
+    .ventajas{grid-template-columns:1fr}
+    .ventaja{padding:26px 0;border-right:none;border-bottom:1px solid var(--linea)}
+    .ventaja:last-child{border-bottom:none}
+    .callout{grid-template-columns:1fr;padding:28px}
+    .callout-big{font-size:72px}
+    .elemento{grid-template-columns:1fr;gap:16px;padding:28px 0}
+    .conditions{grid-template-columns:1fr}
+    .next{padding:32px}
+  }
+</style>
+</head>
+<body>
+
+<!-- =============== LOADER =============== -->
+<div id="loader">
+  <div class="logo-wrap">
+    <span class="logo-ring two"></span>
+    <span class="logo-ring"></span>
+    <div class="logo-iso" aria-hidden="true"></div>
+  </div>
+  <div class="loader-meta">
+    <div class="loader-word">Aigenci · Preparando propuesta</div>
+    <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+    <div class="loader-pct" id="loaderPct">000%</div>
+  </div>
+</div>
+
+<!-- =============== APP =============== -->
+<div class="app" id="app">
+
+  <div class="progress"><div class="progress-fill" id="progFill"></div></div>
+
+  <!-- SIDEBAR -->
+  <aside class="nav">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true"></div>
+      <div class="brand-text">
+        <span class="name">aigenci</span>
+        <span class="sub">Propuesta · 2026</span>
+      </div>
+    </div>
+
+    <div class="nav-label">Contenido</div>
+    <ul class="nav-list" id="navList">
+      <li><a href="#resumen" class="active"><span class="num">01</span>Resumen general</a></li>
+      <li><a href="#reto"><span class="num">02</span>El reto</a></li>
+      <li><a href="#sistema"><span class="num">03</span>Sistema de ventas</a></li>
+      <li><a href="#elementos"><span class="num">04</span>Elementos del sistema</a></li>
+      <li><a href="#escenarios"><span class="num">05</span>Comparativa escenarios</a></li>
+      <li><a href="#ventajas"><span class="num">06</span>Ventajas competitivas</a></li>
+      <li><a href="#timeline"><span class="num">07</span>Timeline</a></li>
+      <li><a href="#inversion"><span class="num">08</span>Modelo de inversión</a></li>
+      <li><a href="#siguientes"><span class="num">09</span>Siguientes pasos</a></li>
+    </ul>
+
+    <div class="nav-foot">
+      <div class="meta"><b>Cliente</b><br>INSTABRAND</div>
+      <div class="meta"><b>Preparado por</b><br>aigenci · Estrategia &amp; adquisición</div>
+      <div class="meta"><b>Versión</b><br>v1.0 · Abril 2026</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- HERO / RESUMEN -->
+    <section id="resumen" class="hero">
+      <div class="hero-inner">
+        <div class="hero-headline">
+          <div class="left">
+            <div class="client-line">Preparado para — INSTABRAND</div>
+            <h1>Construimos una <span class="accent">máquina digital</span><br><span class="italic">para registrar marcas.</span></h1>
+            <p class="hero-sub">
+              Diseñar, construir y lanzar el ecosistema digital completo de INSTABRAND desde cero —
+              de la identidad al sistema de adquisición — para competir de igual a igual en el mercado
+              de registro de marcas en línea.
+            </p>
+
+            <div class="hero-cta">
+              <a href="#inversion" class="btn primary">Ver modelo de inversión <span class="arrow">→</span></a>
+              <a href="#sistema" class="btn ghost">Cómo funciona el sistema</a>
+            </div>
+          </div>
+
+          <figure class="hero-placeholder" aria-label="INSTABRAND — registro de marca">
+            <div class="grid-overlay" aria-hidden="true"></div>
+            <div class="pulse-ring two" aria-hidden="true"></div>
+            <div class="pulse-ring" aria-hidden="true"></div>
+            <div class="ph-corner">
+              <span class="live">Canal en construcción</span>
+              <span>INSTABRAND · 001</span>
+            </div>
+            <div class="rmark" aria-hidden="true">
+              <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="rg" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#5FCFFA"/>
+                    <stop offset="60%" stop-color="#FD327B"/>
+                    <stop offset="100%" stop-color="#FFD166"/>
+                  </linearGradient>
+                </defs>
+                <circle cx="100" cy="100" r="86" stroke="url(#rg)" stroke-width="2.5" stroke-dasharray="4 6"/>
+                <circle cx="100" cy="100" r="68" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
+                <text x="100" y="128" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="96" fill="#fff" letter-spacing="-4">®</text>
+              </svg>
+            </div>
+            <div class="ph-foot">
+              <span class="tag">Identidad</span>
+              <span class="tag">Web</span>
+              <span class="tag">Ads</span>
+              <span class="tag">CRM</span>
+            </div>
+          </figure>
+        </div>
+
+        <div class="hero-objetivo">
+          <div class="sec-meta"><span class="dot"></span>Objetivo de la propuesta <span class="line"></span></div>
+          <p class="lead" style="margin-top:4px">
+            El objetivo central es diseñar, construir y lanzar el ecosistema digital completo de INSTABRAND desde cero:
+            desde la identidad de marca hasta un sistema de adquisición de clientes funcional y medible. No se trata solo de
+            “tener presencia en internet”, sino de crear una máquina digital que posicione a INSTABRAND como una alternativa
+            competitiva en el mercado de registro de marcas en línea, capaz de generar un flujo constante de solicitudes de
+            registro a través de canales propios.
+          </p>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-card-head">
+            <div class="kicker">Resultados esperados · 3–6 meses</div>
+            <h3>De cero clientes a un canal predecible de adquisición.</h3>
+            <p>Marca, infraestructura y campañas validadas con datos reales de CAC — listas para escalar.</p>
+          </div>
+          <div class="stat-row">
+            <div class="stat">
+              <div class="ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10"/><path d="M12 20V4"/><path d="M20 20v-6"/></svg>
+              </div>
+              <div class="body">
+                <b>Marca e infraestructura lista para competir</b>
+                <small>Identidad visual profesional, sitio web optimizado para conversión y perfiles digitales configurados — todo el ecosistema necesario para operar como un servicio legal-digital de primer nivel frente a competidores ya establecidos.</small>
+              </div>
+            </div>
+            <div class="stat">
+              <div class="ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 4 8-9"/><path d="M15 7h5v5"/></svg>
+              </div>
+              <div class="body">
+                <b>Canal de adquisición validado</b>
+                <small>Un sistema de campañas (Google Ads + Meta Ads) que permita conocer con datos reales cuánto cuesta adquirir un cliente de registro de marca (CAC), para poder proyectar crecimiento con certeza financiera.</small>
+              </div>
+            </div>
+            <div class="stat">
+              <div class="ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h6v6H4z"/><path d="M14 4h6v6h-6z"/><path d="M4 14h6v6H4z"/><path d="M14 14h6v6h-6z"/></svg>
+              </div>
+              <div class="body">
+                <b>Pipeline de prospectos predecible</b>
+                <small>Pasar de cero clientes a un modelo donde invertir presupuesto publicitario se traduzca en un volumen estimado de solicitudes de búsqueda y registro de marca, eliminando la dependencia de referidos o contactos personales.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- EL RETO -->
+    <section id="reto">
+      <div class="sec-meta"><span class="dot"></span>02 — El reto <span class="line"></span></div>
+      <div class="two-col">
+        <div>
+          <div class="label">Contexto</div>
+          <h2>Entrar en un mercado<br>con jugadores ya<br><em style="color:var(--morado);font-style:normal">posicionados</em>.</h2>
+        </div>
+        <div>
+          <p class="lead">
+            INSTABRAND entra a un mercado con jugadores digitales ya posicionados, con miles de registros,
+            reseñas y campañas activas.
+          </p>
+          <p style="margin-top:22px;color:rgba(49,39,64,.7);font-size:15px">
+            El reto es construir desde cero un ecosistema digital que permita competir de igual a igual
+            y convertir desconocidos en clientes de forma predecible.
+          </p>
+        </div>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <div class="idx">01 · Confianza</div>
+          <h3>No hay confianza digital</h3>
+          <p>En un servicio legal, el prospecto necesita sentir seguridad antes de pagar. Sin marca, sin reseñas y sin sitio web, INSTABRAND es invisible frente a quienes ya proyectan autoridad.</p>
+        </div>
+        <div class="card">
+          <div class="idx">02 · Demanda</div>
+          <h3>La demanda existe, pero otros la capturan</h3>
+          <p>Cada día hay personas buscando “registrar mi marca” en Google. Sin presencia digital, esos clientes van directo a la competencia.</p>
+        </div>
+        <div class="card">
+          <div class="idx">03 · Escalabilidad</div>
+          <h3>Depender de referidos no escala</h3>
+          <p>Sin un canal propio, el crecimiento queda limitado al boca a boca — lento, impredecible e imposible de acelerar.</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <div class="callout-big">“”</div>
+        <div class="msg">
+          El reto es construir desde cero un <em>ecosistema digital</em> que permita competir de igual a igual
+          y convertir desconocidos en clientes de forma <em>predecible</em>.
+        </div>
+      </div>
+    </section>
+
+    <!-- SISTEMA -->
+    <section id="sistema">
+      <div class="sec-meta"><span class="dot"></span>03 — Sistema de ventas integral <span class="line"></span></div>
+      <div class="two-col">
+        <div>
+          <div class="label">Recorrido del cliente</div>
+          <h2>Seis etapas.<br>Un sistema<br>basado en datos.</h2>
+        </div>
+        <div>
+          <p class="lead">
+            A diferencia del marketing tradicional intuitivo, este sistema se basa en la recolección y
+            optimización de datos. Así funciona el recorrido completo de un cliente de INSTABRAND.
+          </p>
+        </div>
+      </div>
+
+      <div class="journey">
+        <div class="jrow jhead">
+          <div>Etapa</div>
+          <div>Momento</div>
+          <div>Qué sucede</div>
+          <div>Herramienta</div>
+        </div>
+        <div class="jrow">
+          <div class="jstep">01</div>
+          <div class="jname-cell"><small>Descubrimiento</small><span class="jname">Aparecer donde buscan</span></div>
+          <div class="jdesc">El prospecto busca “cómo registrar mi marca” en Google o ve un anuncio en Instagram que le hace darse cuenta de que su marca está desprotegida.</div>
+          <div class="jtools">Google Ads · Meta Ads · Contenido orgánico</div>
+        </div>
+        <div class="jrow">
+          <div class="jstep">02</div>
+          <div class="jname-cell"><small>Confianza</small><span class="jname">Generar autoridad</span></div>
+          <div class="jdesc">Llega al sitio web, encuentra un proceso claro, precios transparentes y prueba social. Entiende el riesgo de no registrar su marca.</div>
+          <div class="jtools">Sitio web · Landing pages</div>
+        </div>
+        <div class="jrow">
+          <div class="jstep">03</div>
+          <div class="jname-cell"><small>Conversión</small><span class="jname">Cerrar la compra</span></div>
+          <div class="jdesc">Solicita la búsqueda de viabilidad y realiza su primer pago directamente en la web. Si no está listo, entra a una secuencia de emails que resuelve dudas.</div>
+          <div class="jtools">Pasarela de pago · Email marketing</div>
+        </div>
+        <div class="jrow">
+          <div class="jstep">04</div>
+          <div class="jname-cell"><small>Onboarding</small><span class="jname">Recolección estructurada</span></div>
+          <div class="jdesc">Completa un formulario detallado con la información requerida para su registro: nombre de marca, giro, logotipo, clasificación, etc.</div>
+          <div class="jtools">Formulario web · CRM</div>
+        </div>
+        <div class="jrow">
+          <div class="jstep">05</div>
+          <div class="jname-cell"><small>Seguimiento</small><span class="jname">Acompañamiento humano</span></div>
+          <div class="jdesc">Recibe acompañamiento personalizado, notificaciones del estatus de su trámite ante el IMPI y una experiencia que lo convierte en referidor natural.</div>
+          <div class="jtools">WhatsApp · Email · CRM</div>
+        </div>
+        <div class="jrow">
+          <div class="jstep">06</div>
+          <div class="jname-cell"><small>Retroalimentación</small><span class="jname">Optimización continua</span></div>
+          <div class="jdesc">Cada conversión alimenta los algoritmos para encontrar más perfiles similares, reduciendo el costo de adquisición mes a mes.</div>
+          <div class="jtools">Pixel Meta · Google Ads · Analítica</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ELEMENTOS -->
+    <section id="elementos">
+      <div class="sec-meta"><span class="dot"></span>04 — Elementos del sistema <span class="line"></span></div>
+      <div class="two-col">
+        <div>
+          <div class="label">Componentes</div>
+          <h2>Siete piezas.<br>Una sola maquinaria<br>digital.</h2>
+        </div>
+        <div>
+          <p class="lead">
+            Cada componente cumple un rol específico en el embudo y, combinados, conforman la
+            infraestructura que sostiene el canal comercial de INSTABRAND.
+          </p>
+        </div>
+      </div>
+
+      <div class="elements">
+        <div class="elemento">
+          <div class="tag">4.1<b>Marca</b></div>
+          <div>
+            <h3>Identidad de Marca y Comunicación</h3>
+            <p class="sub">Construcción de la base visual y verbal de INSTABRAND desde cero.</p>
+            <ul>
+              <li><div><b>Identidad Visual:</b> Logotipo, paleta de colores, tipografía y guía de aplicación para proyectar una marca profesional que genere confianza inmediata — esencial en un servicio legal.</div></li>
+              <li><div><b>Manual de Comunicación:</b> Análisis de ventajas competitivas frente a la competencia, definición de mensajes clave, perfilado de audiencia y hoja de ruta de comunicación.</div></li>
+              <li><div><b>Perfiles Digitales:</b> Configuración profesional de Facebook e Instagram con imagen cohesiva, botones de acción y biografías optimizadas.</div></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="elemento">
+          <div class="tag">4.2<b>Web</b></div>
+          <div>
+            <h3>Página Web: Infraestructura de Conversión</h3>
+            <p class="sub">El centro de operaciones donde el prospecto se convierte en cliente.</p>
+            <ul>
+              <li><div><b>Diseño UX/UI:</b> Interfaz mobile-first, clara y orientada a la acción — inspirada en los mejores referentes del mercado pero diferenciada.</div></li>
+              <li><div><b>Arquitectura de Conversión:</b> CTAs estratégicos, flujo de compra simplificado (búsqueda → pago → formulario de onboarding) y prueba social visible.</div></li>
+              <li><div><b>Analítica:</b> Integración de Google Analytics 4, Search Console y pixels de seguimiento para medir cada peso invertido.</div></li>
+              <li><div><b>Hosting e Infraestructura:</b> Servidores seguros, certificado SSL y velocidad optimizada.</div></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="elemento">
+          <div class="tag">4.3<b>Orgánico</b></div>
+          <div>
+            <h3>Contenido Orgánico (Meta)</h3>
+            <p class="sub">Presencia constante que educa, genera autoridad y alimenta el embudo.</p>
+            <ul>
+              <li><div>Publicaciones mensuales con mix de formatos: estáticas, carruseles educativos y reels.</div></li>
+              <li><div>Contenido enfocado en dolor del prospecto: “¿Sabías que alguien puede registrar tu marca antes que tú?”, casos reales, proceso simplificado, FAQs.</div></li>
+              <li><div>Redacción de copys, hashtags estratégicos y programación.</div></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="elemento">
+          <div class="tag">4.4<b>Google</b></div>
+          <div>
+            <h3>Campañas en Google Ads</h3>
+            <p class="sub">Captura de demanda activa — personas que ya están buscando el servicio.</p>
+            <ul>
+              <li><div><b>Estrategia:</b> Investigación de palabras clave de alta intención (“registrar marca IMPI”, “proteger nombre de negocio”, “registro de marca en línea”), análisis de competencia y configuración de concordancias.</div></li>
+              <li><div><b>Gestión:</b> Creación de anuncios de texto, extensiones y configuración de pujas.</div></li>
+              <li><div><b>Optimización:</b> Ajuste de ofertas, limpieza de términos negativos y mejora del Quality Score.</div></li>
+              <li><div><b>Reportes:</b> Informes periódicos enfocados en CPL, tasa de conversión y CAC.</div></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="elemento">
+          <div class="tag">4.5<b>Meta</b></div>
+          <div>
+            <h3>Campañas en Meta Ads (Facebook &amp; Instagram)</h3>
+            <p class="sub">Generación de demanda nueva — personas que aún no saben que necesitan registrar su marca.</p>
+            <ul>
+              <li><div><b>Estrategia:</b> Segmentación de emprendedores, dueños de negocio y startups. Diseño de estructura de campañas por objetivo (leads, tráfico, conversiones).</div></li>
+              <li><div><b>Creativos:</b> Diseño y adaptación de anuncios visuales y audiovisuales.</div></li>
+              <li><div><b>Optimización:</b> A/B testing de creativos y audiencias, ajustes de presupuesto para maximizar ROAS.</div></li>
+              <li><div><b>Infraestructura:</b> Configuración del Pixel de Meta para seguimiento de conversiones.</div></li>
+              <li><div><b>Reportes:</b> Informes periódicos con métricas de negocio.</div></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="elemento">
+          <div class="tag">4.6<b>Email</b></div>
+          <div>
+            <h3>Email Marketing</h3>
+            <p class="sub">Recuperación de prospectos que no convirtieron en la primera visita.</p>
+            <ul>
+              <li><div><b>Nurturing:</b> Secuencias educativas que resuelven objeciones: precio, tiempo del trámite, qué pasa si no registro mi marca.</div></li>
+              <li><div><b>Retargeting:</b> Seguimiento automatizado a visitantes que abandonaron el proceso de compra.</div></li>
+              <li><div><b>Objetivo:</b> Cerrar la venta de quienes ya mostraron interés pero necesitan un empujón.</div></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="elemento">
+          <div class="tag">4.7<b>Diseño</b></div>
+          <div>
+            <h3>Diseño a la Carta</h3>
+            <p class="sub">Soporte creativo continuo para necesidades puntuales.</p>
+            <ul>
+              <li><div>Piezas gráficas para campañas, lanzamientos o materiales adicionales alineados a la identidad de marca.</div></li>
+              <li><div>Adaptación de contenido para distintos formatos y canales según se requiera.</div></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ESCENARIOS -->
+    <section id="escenarios">
+      <div class="sec-meta"><span class="dot"></span>05 — Comparativa de escenarios <span class="line"></span></div>
+      <div class="two-col">
+        <div>
+          <div class="label">Proyección</div>
+          <h2>Dos escenarios.<br>La misma inversión<br>en pauta.</h2>
+        </div>
+        <div>
+          <p class="lead">
+            Proyección basada en métricas de mercado para servicios legales digitales, asumiendo una
+            inversión en pauta publicitaria de <b>$8,000 MXN mensuales</b> y un ticket promedio de
+            <b>$7,500 MXN</b> por registro de marca.
+          </p>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="proj">
+          <thead>
+            <tr>
+              <th style="width:38%">Métrica</th>
+              <th class="cons">Escenario conservador</th>
+              <th class="opt">Escenario optimista</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="metric">Inversión mensual Ads</td><td class="val">$8,000 MXN</td><td class="val hl">$8,000 MXN</td></tr>
+            <tr><td class="metric">CPC (Costo por Clic)</td><td class="val">$15 MXN</td><td class="val hl">$10 MXN</td></tr>
+            <tr><td class="metric">Visitantes / mes</td><td class="val">533</td><td class="val hl">800</td></tr>
+            <tr><td class="metric">Tasa de conversión (compra)</td><td class="val">0.75%</td><td class="val hl">1.25%</td></tr>
+            <tr><td class="metric">Compras / mes</td><td class="val">4</td><td class="val hl">10</td></tr>
+            <tr><td class="metric">CPA (Costo por Adquisición)</td><td class="val">$2,000 MXN</td><td class="val hl">$800 MXN</td></tr>
+            <tr class="big"><td class="metric"><b>Ingreso potencial mensual</b></td><td class="val">$30,000 MXN</td><td class="val hl">$75,000 MXN</td></tr>
+            <tr class="big"><td class="metric"><b>ROAS · retorno de inversión</b></td><td class="val">3.75×</td><td class="val hl">9.4×</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note-block">
+        <div class="icon">i</div>
+        <div>
+          El sistema es rentable incluso en el escenario más conservador: por cada peso invertido en pauta se recuperan al menos
+          <b>$3.75</b>. Una vez optimizado el CPA, el canal se vuelve totalmente escalable — invertir más presupuesto se traduce
+          directamente en <b>más registros de marca</b>.
+        </div>
+      </div>
+    </section>
+
+    <!-- VENTAJAS -->
+    <section id="ventajas">
+      <div class="sec-meta"><span class="dot"></span>06 — Ventajas competitivas <span class="line"></span></div>
+      <h2 style="max-width:760px">Por qué esta estrategia<br>gana tiempo al mercado.</h2>
+
+      <div class="ventajas">
+        <div class="ventaja">
+          <div class="badge">Ecosistema propio</div>
+          <h3>Dueño del canal desde el día uno.</h3>
+          <p>No dependerás de marketplaces, directorios legales ni referidos. Serás dueño de tu canal de adquisición, tu base de datos y tu marca — activos que se revalorizan con el tiempo.</p>
+        </div>
+        <div class="ventaja">
+          <div class="badge">Compra directa</div>
+          <h3>Menos fricción, más escala.</h3>
+          <p>A diferencia de modelos que dependen de llamadas de venta o cotizaciones, el cliente compra directamente en el sitio. Esto reduce fricción, elimina cuellos de botella humanos y permite escalar sin necesidad de ampliar el equipo comercial.</p>
+        </div>
+        <div class="ventaja">
+          <div class="badge">Decisiones con datos</div>
+          <h3>Cada peso dirigido quirúrgicamente.</h3>
+          <p>Sabrás exactamente qué campaña, qué anuncio y qué canal genera más compras, permitiéndote dirigir cada peso de inversión de forma quirúrgica.</p>
+        </div>
+        <div class="ventaja">
+          <div class="badge">Crecimiento controlado</div>
+          <h3>Tú tienes el acelerador.</h3>
+          <p>¿Capacidad para más registros? Aumentas presupuesto. ¿Saturación operativa? Lo reduces. El canal se adapta al ritmo de tu operación.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section id="timeline">
+      <div class="sec-meta"><span class="dot"></span>07 — Timeline de implementación <span class="line"></span></div>
+      <div class="two-col">
+        <div>
+          <div class="label">Cuatro fases</div>
+          <h2>De los fundamentos<br>al escalamiento.</h2>
+        </div>
+        <div>
+          <p class="lead">
+            Una ruta clara de implementación en la que cada fase entrega un hito medible
+            y prepara la siguiente.
+          </p>
+        </div>
+      </div>
+
+      <div class="timeline">
+        <div class="phase current">
+          <div class="when">Fase 1 · Semanas 1 – 3</div>
+          <h3>Fundamentos de marca</h3>
+          <ul>
+            <li>Desarrollo de identidad visual (logotipo, paleta, tipografía, guía de aplicación).</li>
+            <li>Manual de comunicación y estrategia de marca.</li>
+            <li>Configuración y optimización de perfiles en Facebook e Instagram.</li>
+          </ul>
+          <span class="hito">Hito · Marca lista para salir al mundo</span>
+        </div>
+        <div class="phase">
+          <div class="when">Fase 2 · Semanas 4 – 7</div>
+          <h3>Infraestructura digital</h3>
+          <ul>
+            <li>Diseño y desarrollo del sitio web con flujo de compra directa.</li>
+            <li>Integración de pasarela de pago, formulario de onboarding y analítica.</li>
+            <li>Configuración de pixels (Meta y Google) y herramientas de medición.</li>
+            <li>Diseño de secuencias de email marketing (nurturing + retargeting).</li>
+          </ul>
+          <span class="hito">Hito · Plataforma de conversión lista para recibir tráfico</span>
+        </div>
+        <div class="phase">
+          <div class="when">Fase 3 · Semanas 8 – 10</div>
+          <h3>Lanzamiento y activación</h3>
+          <ul>
+            <li>Lanzamiento de campañas en Google Ads y Meta Ads.</li>
+            <li>Inicio de publicaciones de contenido orgánico.</li>
+            <li>Primeras compras y recolección de datos reales de CPA.</li>
+          </ul>
+          <span class="hito">Hito · Sistema completo operando y generando ventas</span>
+        </div>
+        <div class="phase">
+          <div class="when">Fase 4 · Mes 3 en adelante</div>
+          <h3>Optimización y escalamiento</h3>
+          <ul>
+            <li>Ajustes para reducir el CPA con datos reales.</li>
+            <li>A/B testing de creativos, audiencias y páginas de destino.</li>
+            <li>Identificación de oportunidades para escalar presupuesto.</li>
+          </ul>
+          <span class="hito">Hito · Modelo validado listo para escalar inversión</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- INVERSIÓN -->
+    <section id="inversion">
+      <div class="sec-meta"><span class="dot"></span>08 — Modelo de inversión <span class="line"></span></div>
+      <div class="two-col">
+        <div>
+          <div class="label">Dos modalidades</div>
+          <h2>Elige el nivel<br>de alcance.</h2>
+        </div>
+        <div>
+          <p class="lead">
+            Presentamos dos modalidades de servicio adaptadas al nivel de alcance y canales
+            de adquisición que INSTABRAND necesite activar.
+          </p>
+        </div>
+      </div>
+
+      <div class="pricing">
+        <div class="plan">
+          <div class="pname">Opción A</div>
+          <h3>Sistema One</h3>
+          <div class="tag">Base sólida para captación digital.</div>
+          <div class="price">
+            <span class="num">$12,000</span>
+            <span class="cur">MXN</span>
+            <small>fee mensual</small>
+          </div>
+          <ul class="features">
+            <li><span class="check">✓</span><span>Identidad Visual de Marca</span></li>
+            <li><span class="check">✓</span><span>Manual de Comunicación y Estrategia</span></li>
+            <li><span class="check">✓</span><span>Optimización de Perfiles Digitales</span></li>
+            <li><span class="check">✓</span><span>Diseño y Desarrollo Web</span></li>
+            <li><span class="check">✓</span><span>Campañas en Google Ads</span></li>
+            <li><span class="check">✓</span><span>Campañas en Meta Ads</span></li>
+            <li><span class="check">✓</span><span>Contenido Orgánico (Redes Sociales)</span></li>
+            <li class="no"><span class="check">—</span><span>Email Marketing</span></li>
+            <li class="no"><span class="check">—</span><span>Diseño a la Carta</span></li>
+          </ul>
+        </div>
+
+        <div class="plan featured">
+          <div class="pname">Opción B</div>
+          <h3>Sistema Pro</h3>
+          <div class="tag">Solución completa: captación + retención + soporte creativo.</div>
+          <div class="price">
+            <span class="num">$18,000</span>
+            <span class="cur">MXN</span>
+            <small>fee mensual</small>
+          </div>
+          <ul class="features">
+            <li><span class="check">✓</span><span>Identidad Visual de Marca</span></li>
+            <li><span class="check">✓</span><span>Manual de Comunicación y Estrategia</span></li>
+            <li><span class="check">✓</span><span>Optimización de Perfiles Digitales</span></li>
+            <li><span class="check">✓</span><span>Diseño y Desarrollo Web</span></li>
+            <li><span class="check">✓</span><span>Campañas en Google Ads</span></li>
+            <li><span class="check">✓</span><span>Campañas en Meta Ads</span></li>
+            <li><span class="check">✓</span><span>Contenido Orgánico (Redes Sociales)</span></li>
+            <li><span class="check">✓</span><span class="hl">Email Marketing</span></li>
+            <li><span class="check">✓</span><span class="hl">Diseño a la Carta</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="offer">
+        <div class="offer-flame" aria-hidden="true">🔥</div>
+        <div class="offer-body">
+          <div class="label">Oferta especial de lanzamiento</div>
+          <h3>Sistema PRO completo al precio de Sistema ONE.</h3>
+          <p>Por ser un proyecto que arrancamos juntos desde cero, ofrecemos el <b>Sistema PRO completo al precio del Sistema ONE: $12,000 MXN mensuales</b> (en lugar de $18,000 MXN). Esta tarifa preferencial aplica durante el periodo inicial de contratación.</p>
+        </div>
+        <div class="offer-price">
+          <span class="strike">$18,000 MXN</span>
+          <span class="now">$12,000 MXN</span>
+          <span class="unit">fee mensual · lanzamiento</span>
+        </div>
+      </div>
+
+      <div class="conditions">
+        <div class="cond"><span>Duración</span><b>Continua · servicio mensual</b></div>
+        <div class="cond"><span>Contratación mínima</span><b>6 meses</b></div>
+        <div class="cond"><span>Precios</span><b>No incluyen IVA</b></div>
+        <div class="cond"><span>Al finalizar el periodo</span><b>Revisas y ajustas servicios</b></div>
+        <div class="cond"><span>No incluye</span><b>Herramientas adicionales ni pauta</b></div>
+        <div class="cond"><span>Inversión sugerida en pauta</span><b>$8,000 MXN / mes</b></div>
+      </div>
+    </section>
+
+    <!-- SIGUIENTES -->
+    <section id="siguientes">
+      <div class="sec-meta"><span class="dot"></span>09 — Siguientes pasos <span class="line"></span></div>
+
+      <div class="next">
+        <div class="next-inner">
+          <div>
+            <h2>Listos para construir<br>el ecosistema de INSTABRAND.</h2>
+            <p>
+              Tres pasos claros para pasar de la propuesta al arranque de la Fase 1
+              — identidad visual y estrategia de comunicación.
+            </p>
+            <div class="cta-block">
+              <a href="#" class="btn primary">Agendar kickoff <span class="arrow">→</span></a>
+              <a href="#" class="btn ghost">Descargar propuesta (PDF)</a>
+            </div>
+          </div>
+          <ul class="next-steps">
+            <li>
+              <span class="n">1</span>
+              <div><h4>Confirmación de propuesta</h4><p>Seleccionar el sistema deseado y firmar acuerdo de servicios.</p></div>
+            </li>
+            <li>
+              <span class="n">2</span>
+              <div><h4>Kickoff</h4><p>Reunión inicial para alinear objetivos, recopilar insumos de marca y definir accesos necesarios.</p></div>
+            </li>
+            <li>
+              <span class="n">3</span>
+              <div><h4>Arranque Fase 1</h4><p>Inicio del desarrollo de identidad visual y estrategia de comunicación.</p></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div>aigenci · propuesta preparada para INSTABRAND · 2026</div>
+      <div>Documento confidencial · v1.0</div>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  // LOADER
+  (function(){
+    const loader = document.getElementById('loader');
+    const app = document.getElementById('app');
+    const pct = document.getElementById('loaderPct');
+    let p = 0;
+    const iv = setInterval(()=>{
+      p += Math.random()*8 + 3;
+      if(p>=100){ p=100; clearInterval(iv); }
+      pct.textContent = String(Math.floor(p)).padStart(3,'0') + '%';
+    }, 80);
+    window.addEventListener('load', ()=>{
+      const start = performance.now();
+      const minDuration = 1800;
+      const wait = Math.max(0, minDuration - (performance.now() - start));
+      setTimeout(()=>{
+        clearInterval(iv);
+        pct.textContent = '100%';
+        setTimeout(()=>{
+          loader.classList.add('done');
+          app.classList.add('ready');
+        }, 250);
+      }, wait);
+    });
+  })();
+
+  // ACTIVE NAV
+  (function(){
+    const links = Array.from(document.querySelectorAll('#navList a'));
+    const sections = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    const setActive = (i) => { links.forEach((l,j)=> l.classList.toggle('active', j===i)); };
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          const i = sections.indexOf(e.target);
+          if(i>=0) setActive(i);
+        }
+      });
+    }, {rootMargin:'-45% 0px -50% 0px', threshold:0});
+    sections.forEach(s=>io.observe(s));
+  })();
+
+  // SCROLL PROGRESS
+  (function(){
+    const fill = document.getElementById('progFill');
+    const onScroll = ()=>{
+      const h = document.documentElement;
+      const max = h.scrollHeight - h.clientHeight;
+      const p = max>0 ? (h.scrollTop||window.scrollY)/max : 0;
+      fill.style.width = (p*100).toFixed(2)+'%';
+    };
+    window.addEventListener('scroll', onScroll, {passive:true});
+    onScroll();
+  })();
+</script>
+
+</body>
+</html>
